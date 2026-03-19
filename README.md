@@ -1,4 +1,4 @@
-# DoctorC
+# DoctorConnect
 Doctor Appointment booking system
 ## **1. Introduction**
 
