@@ -10,15 +10,23 @@ const {
   deleteDoctor
 } = require('../controllers/doctorController');
 
+// JWT middleware
+const { verifyToken, authorizeRoles } = require('../middleware/authMiddleware');
 
-// Create doctor
-router.post('/', createDoctor);
 
 // Get all doctors
 router.get('/', getAllDoctors);
 
 // Get doctor by id
 router.get('/:id', getDoctorById);
+
+// Create doctor (Admin only)
+router.post(
+  '/',
+  verifyToken,
+  authorizeRoles("admin"),
+  createDoctor
+);
 
 // Update doctor
 router.put('/:id', updateDoctor);
