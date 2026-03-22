@@ -11,6 +11,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', require('./routes/authRoutes'));
+
+// Doctor routes
+app.use('/api/doctors', require('./routes/doctorRoutes'));
+
+//Appointment routes
+app.use('/api/appointments', require('./routes/appointmentRoutes'));
+
 app.get("/", (req, res) => {
   res.send("MediConnect Backend Running");
 });
