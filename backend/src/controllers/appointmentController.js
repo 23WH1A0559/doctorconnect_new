@@ -22,6 +22,28 @@ exports.bookAppointment = async (req, res) => {
       });
     }
 
+  //Automatic slot book
+    const doctor = await Doctor.findById(doctorId);
+
+// Find slot
+const slot = doctor.availableSlots.find(
+  s => s.date === appointmentDate && s.time === appointmentTime
+);
+
+if (!slot) {
+  return res.status(400).json({ message: "Slot not available" });
+}
+
+if (slot.isBooked) {
+  return res.status(400).json({ message: "Slot already booked" });
+}
+
+// Mark slot as booked
+slot.isBooked = true;
+
+await doctor.save();
+
+
     // Create new appointment
     const appointment = await Appointment.create({
       patientId,

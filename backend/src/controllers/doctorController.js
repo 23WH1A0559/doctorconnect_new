@@ -97,3 +97,102 @@ exports.deleteDoctor = async (req, res) => {
   }
 };
 
+/*// ================= ADD SLOT =================
+exports.addSlot = async (req, res) => {
+  try {
+
+    const { doctorId } = req.params;
+    const { date, time } = req.body;
+
+    // Find doctor
+    const doctor = await Doctor.findById(doctorId);
+
+    if (!doctor)
+      return res.status(404).json({ message: "Doctor not found" });
+
+    // Add new slot
+    doctor.availableSlots.push({
+      date,
+      time,
+      isBooked: false
+    });
+
+    await doctor.save();
+
+    res.status(200).json({ message: "Slot added successfully", doctor });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+*/
+// ================= ADD SLOT =================
+exports.addSlot = async (req, res) => {
+  try {
+
+    const { doctorId } = req.params;
+    const { date, time } = req.body;
+
+    // Find doctor
+    const doctor = await Doctor.findById(doctorId);
+
+    if (!doctor)
+      return res.status(404).json({ message: "Doctor not found" });
+
+    //  STEP 3: Check if logged-in doctor is same
+    if (req.user.id !== doctor.userId.toString()) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    //  STEP 2: Prevent duplicate slots
+    const exists = doctor.availableSlots.find(
+      s => s.date === date && s.time === time
+    );
+
+    if (exists) {
+      return res.status(400).json({ message: "Slot already exists" });
+    }
+
+    // Add slot
+    doctor.availableSlots.push({
+      date,
+      time,
+      isBooked: false
+    });
+
+    await doctor.save();
+
+    res.status(200).json({
+      message: "Slot added successfully",
+      doctor
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// ================= GET AVAILABLE SLOTS =================
+exports.getAvailableSlots = async (req, res) => {
+  try {
+
+    const { doctorId } = req.params;
+
+    const doctor = await Doctor.findById(doctorId);
+
+    if (!doctor)
+      return res.status(404).json({ message: "Doctor not found" });
+
+    // Filter only available slots
+    const availableSlots = doctor.availableSlots.filter(
+      slot => !slot.isBooked
+    );
+
+    res.status(200).json(availableSlots);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
