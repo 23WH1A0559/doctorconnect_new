@@ -22,11 +22,12 @@ function Login() {
       const res = await API.post("/auth/login", form);
 
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
       alert("Login successful");
 
       // Redirect after login
-      navigate("/");
+      navigate("/doctors");
 
     } catch (err) {
       alert("Login failed");
