@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 function Doctors() {
 
   const [doctors, setDoctors] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
 
-
+  const navigate = useNavigate();
  
   // Fetch doctors from backend
   useEffect(() => {
@@ -77,7 +78,8 @@ function Doctors() {
       <p><b>Specialization:</b> {doc.specialization}</p>
       <p><b>Experience:</b> {doc.experience} years</p>
 
-      <button style={styles.button}>
+      <button style={styles.button}
+      onClick={() => navigate(`/book/${doc._id}`)}>
         Book Appointment
       </button>
     </div>

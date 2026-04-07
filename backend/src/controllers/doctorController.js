@@ -185,11 +185,14 @@ exports.getAvailableSlots = async (req, res) => {
       return res.status(404).json({ message: "Doctor not found" });
 
     // Filter only available slots
-    const availableSlots = doctor.availableSlots.filter(
+    /*const availableSlots = doctor.availableSlots.filter(
       slot => !slot.isBooked
     );
 
-    res.status(200).json(availableSlots);
+    res.status(200).json(availableSlots); */
+    // NEW
+    //show all slots
+      res.status(200).json(doctor.availableSlots);
 
   } catch (error) {
     res.status(500).json({ message: error.message });
